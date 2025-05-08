@@ -1,6 +1,13 @@
 # bodhi-async-batch
 
-🚀 A powerful TypeScript utility for running asynchronous tasks in batches with controlled concurrency. Perfect for handling API calls, file operations, database queries, and any other async operations that need to be processed in batches.
+A powerful utility for running asynchronous tasks in batches with controlled concurrency. Perfect for handling API calls, database operations, and file processing tasks with optimal performance and resource management.
+
+## Language Support
+
+`bodhi-async-batch` is built with dual language support:
+- **TypeScript**: Full TypeScript support with type definitions
+- **JavaScript**: Native JavaScript support (ES6+)
+- **Module Formats**: Supports both CommonJS (`require`) and ESM (`import`) formats
 
 [![npm version](https://img.shields.io/npm/v/bodhi-async-batch.svg)](https://www.npmjs.com/package/bodhi-async-batch)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
@@ -11,6 +18,45 @@
 
 ```bash
 npm install bodhi-async-batch
+```
+
+### TypeScript Usage
+```typescript
+import { asyncBatch } from 'bodhi-async-batch';
+
+interface User {
+  id: number;
+  name: string;
+}
+
+const tasks = [
+  async () => fetchUser(1),
+  async () => fetchUser(2),
+  async () => fetchUser(3)
+];
+
+const results = await asyncBatch<User>(tasks, {
+  concurrency: 2,
+  failFast: true,
+  onProgress: (completed, total) => console.log(`Progress: ${completed}/${total}`)
+});
+```
+
+### JavaScript Usage
+```javascript
+const { asyncBatch } = require('bodhi-async-batch');
+
+const tasks = [
+  async () => fetchUser(1),
+  async () => fetchUser(2),
+  async () => fetchUser(3)
+];
+
+const results = await asyncBatch(tasks, {
+  concurrency: 2,
+  failFast: true,
+  onProgress: (completed, total) => console.log(`Progress: ${completed}/${total}`)
+});
 ```
 
 
