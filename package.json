@@ -169,7 +169,7 @@
     "type": "git",
     "url": "git+https://github.com/BODHEESH/bodhi-async-batch.git"
   },
-  "readme": "README.npm.md",
+  "readme": "README.md",
   "bugs": {
     "url": "https://github.com/BODHEESH/bodhi-async-batch/issues"
   },

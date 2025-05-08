@@ -59,69 +59,6 @@ const results = await asyncBatch(tasks, {
 });
 ```
 
-
-## 🏗️ Architecture
-
-### High-Level Design (HLD)
-
-```mermaid
-graph TB
-    Client[Client Application] --> AsyncBatch[AsyncBatch Module]
-    AsyncBatch --> TaskQueue[Task Queue Manager]
-    AsyncBatch --> ConcurrencyManager[Concurrency Controller]
-    AsyncBatch --> ErrorHandler[Error Handler]
-    
-    TaskQueue --> Executor[Task Executor]
-    ConcurrencyManager --> Executor
-    ErrorHandler --> Executor
-    
-    Executor --> Results[Results Aggregator]
-    
-    subgraph Monitoring
-        ProgressTracker[Progress Tracker]
-        ErrorHandler
-    end
-```
-
-### Low-Level Design (LLD)
-
-```mermaid
-sequenceDiagram
-    participant Client
-    participant AsyncBatch
-    participant TaskQueue
-    participant ConcurrencyManager
-    participant Executor
-    participant ErrorHandler
-
-    Client->>AsyncBatch: asyncBatch(tasks, options)
-    AsyncBatch->>TaskQueue: Initialize Queue
-    AsyncBatch->>ConcurrencyManager: Set Concurrency Limit
-    
-    loop For each batch
-        TaskQueue->>Executor: Get Next Batch
-        Executor->>ConcurrencyManager: Check Available Slots
-        ConcurrencyManager-->>Executor: Slots Available
-        
-        par Parallel Execution
-            Executor->>Executor: Execute Task 1
-            Executor->>Executor: Execute Task 2
-            Executor->>Executor: Execute Task N
-        end
-        
-        alt Task Success
-            Executor-->>AsyncBatch: Task Result
-        else Task Error
-            Executor->>ErrorHandler: Handle Error
-            ErrorHandler-->>AsyncBatch: Error Result
-        end
-        
-        AsyncBatch->>Client: Progress Update
-    end
-    
-    AsyncBatch->>Client: Final Results
-```
-
 ### Technical Architecture
 
 1. **Entry Points**
@@ -382,6 +319,73 @@ Contributions are welcome! Please feel free to submit a Pull Request. For major 
 ## 📝 License
 
 MIT
+
+
+
+
+
+## 🏗️ Architecture
+
+### High-Level Design (HLD)
+
+```mermaid
+graph TB
+    Client[Client Application] --> AsyncBatch[AsyncBatch Module]
+    AsyncBatch --> TaskQueue[Task Queue Manager]
+    AsyncBatch --> ConcurrencyManager[Concurrency Controller]
+    AsyncBatch --> ErrorHandler[Error Handler]
+    
+    TaskQueue --> Executor[Task Executor]
+    ConcurrencyManager --> Executor
+    ErrorHandler --> Executor
+    
+    Executor --> Results[Results Aggregator]
+    
+    subgraph Monitoring
+        ProgressTracker[Progress Tracker]
+        ErrorHandler
+    end
+```
+
+### Low-Level Design (LLD)
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant AsyncBatch
+    participant TaskQueue
+    participant ConcurrencyManager
+    participant Executor
+    participant ErrorHandler
+
+    Client->>AsyncBatch: asyncBatch(tasks, options)
+    AsyncBatch->>TaskQueue: Initialize Queue
+    AsyncBatch->>ConcurrencyManager: Set Concurrency Limit
+    
+    loop For each batch
+        TaskQueue->>Executor: Get Next Batch
+        Executor->>ConcurrencyManager: Check Available Slots
+        ConcurrencyManager-->>Executor: Slots Available
+        
+        par Parallel Execution
+            Executor->>Executor: Execute Task 1
+            Executor->>Executor: Execute Task 2
+            Executor->>Executor: Execute Task N
+        end
+        
+        alt Task Success
+            Executor-->>AsyncBatch: Task Result
+        else Task Error
+            Executor->>ErrorHandler: Handle Error
+            ErrorHandler-->>AsyncBatch: Error Result
+        end
+        
+        AsyncBatch->>Client: Progress Update
+    end
+    
+    AsyncBatch->>Client: Final Results
+```
+
 
 ## 🌟 Project Details
 
