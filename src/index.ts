@@ -14,11 +14,7 @@ export async function asyncBatch<T>(
   tasks: (() => Promise<T>)[],
   options: AsyncBatchOptions = {}
 ): Promise<T[]> {
-  const {
-    concurrency = 5,
-    failFast = false,
-    onProgress = undefined,
-  } = options;
+  const { concurrency = 5, failFast = false, onProgress = undefined } = options;
 
   const total = tasks.length;
   const results: (T | Error)[] = new Array(total);
@@ -48,7 +44,8 @@ export async function asyncBatch<T>(
         firstError = error instanceof Error ? error : new Error(String(error));
         return;
       }
-      results[taskIndex] = error instanceof Error ? error : new Error(String(error));
+      results[taskIndex] =
+        error instanceof Error ? error : new Error(String(error));
     } finally {
       inProgress.delete(taskIndex);
       if (!failed) {
@@ -67,9 +64,7 @@ export async function asyncBatch<T>(
 
     if (inProgress.size > 0) {
       // Wait for all current tasks to complete
-      await Promise.all(
-        Array.from(inProgress).map(processTask)
-      );
+      await Promise.all(Array.from(inProgress).map(processTask));
 
       if (failed && firstError) {
         throw firstError;
@@ -81,7 +76,7 @@ export async function asyncBatch<T>(
   const allFailed = results.every((result) => result instanceof Error);
   if (allFailed) {
     throw new Error(
-      `All tasks failed to execute: ${(results as Error[]).map(e => e.message).join(', ')}`
+      `All tasks failed to execute: ${(results as Error[]).map((e) => e.message).join(', ')}`
     );
   }
 

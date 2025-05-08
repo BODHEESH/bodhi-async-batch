@@ -1,6 +1,6 @@
 {
   "name": "bodhi-async-batch",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Run asynchronous tasks in batches with controlled concurrency - perfect for API calls, database operations, and file processing",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -186,7 +186,6 @@
     "jest": "^29.7.0",
     "prettier": "^3.5.3",
     "ts-jest": "^29.3.2",
-
     "typescript": "^5.8.3"
   }
 }
