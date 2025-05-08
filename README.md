@@ -60,6 +60,105 @@ const results = await asyncBatch(tasks, {
 ```
 
 
+## 🏗️ Architecture
+
+### High-Level Design (HLD)
+
+```mermaid
+graph TB
+    Client[Client Application] --> AsyncBatch[AsyncBatch Module]
+    AsyncBatch --> TaskQueue[Task Queue Manager]
+    AsyncBatch --> ConcurrencyManager[Concurrency Controller]
+    AsyncBatch --> ErrorHandler[Error Handler]
+    
+    TaskQueue --> Executor[Task Executor]
+    ConcurrencyManager --> Executor
+    ErrorHandler --> Executor
+    
+    Executor --> Results[Results Aggregator]
+    
+    subgraph Monitoring
+        ProgressTracker[Progress Tracker]
+        ErrorHandler
+    end
+```
+
+### Low-Level Design (LLD)
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant AsyncBatch
+    participant TaskQueue
+    participant ConcurrencyManager
+    participant Executor
+    participant ErrorHandler
+
+    Client->>AsyncBatch: asyncBatch(tasks, options)
+    AsyncBatch->>TaskQueue: Initialize Queue
+    AsyncBatch->>ConcurrencyManager: Set Concurrency Limit
+    
+    loop For each batch
+        TaskQueue->>Executor: Get Next Batch
+        Executor->>ConcurrencyManager: Check Available Slots
+        ConcurrencyManager-->>Executor: Slots Available
+        
+        par Parallel Execution
+            Executor->>Executor: Execute Task 1
+            Executor->>Executor: Execute Task 2
+            Executor->>Executor: Execute Task N
+        end
+        
+        alt Task Success
+            Executor-->>AsyncBatch: Task Result
+        else Task Error
+            Executor->>ErrorHandler: Handle Error
+            ErrorHandler-->>AsyncBatch: Error Result
+        end
+        
+        AsyncBatch->>Client: Progress Update
+    end
+    
+    AsyncBatch->>Client: Final Results
+```
+
+### Technical Architecture
+
+1. **Entry Points**
+   - JavaScript (CommonJS): `dist/index.js`
+   - JavaScript (ESM): `dist/index.mjs`
+   - TypeScript: `dist/index.d.ts`
+
+2. **Core Components**
+   ```
+   bodhi-async-batch/
+   ├── src/
+   │   ├── index.ts        # TypeScript implementation
+   │   └── index.js        # JavaScript implementation
+   ├── dist/
+   │   ├── index.js       # Compiled CommonJS
+   │   ├── index.mjs      # Compiled ESM
+   │   └── index.d.ts     # Type definitions
+   └── tools/
+       └── create-mjs.js  # ESM converter
+   ```
+
+3. **Key Interfaces**
+   ```typescript
+   interface AsyncBatchOptions {
+     concurrency?: number;    // Parallel execution limit
+     failFast?: boolean;      // Error handling strategy
+     onProgress?: Function;   // Progress callback
+   }
+   ```
+
+4. **Processing Flow**
+   - Task Queue Management
+   - Concurrency Control
+   - Error Handling
+   - Progress Tracking
+   - Results Aggregation
+
 ## 🌟 Features
 
 - 🔄 Run async tasks with controlled concurrency
