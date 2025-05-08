@@ -1,0 +1,12 @@
+src/
+tests/
+.eslintrc.json
+.prettierrc
+tsconfig.json
+.github/
+.vscode/
+*.log
+.DS_Store
+coverage/
+.env
+.env.*
