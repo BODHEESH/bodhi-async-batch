@@ -1,9 +1,9 @@
 import { asyncBatch } from '../src';
 import { describe, expect, it } from '@jest/globals';
 
-
 describe('asyncBatch', () => {
-  const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+  const delay = (ms: number) =>
+    new Promise((resolve) => setTimeout(resolve, ms));
 
   it('should process tasks with default concurrency', async () => {
     const tasks = [
