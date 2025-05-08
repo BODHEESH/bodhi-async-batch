@@ -19,7 +19,7 @@
   ],
   "scripts": {
     "build": "npm run build:js && npm run build:ts",
-    "build:js": "cp src/index.js dist/index.js && node tools/create-mjs.js",
+    "build:js": "if not exist dist mkdir dist && copy /Y ./src/index.js ./dist/index.js && node tools/create-mjs.js",
     "build:ts": "tsc",
     "test": "jest --coverage",
     "lint": "eslint src tests",
@@ -163,19 +163,19 @@
     "reliable",
     "robust"
   ],
-  "author": "Bodhi",
+  "author": "Bodheesh",
+  "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/bodhi/bodhi-async-batch.git"
+    "url": "git+https://github.com/BODHEESH/bodhi-async-batch.git"
   },
   "bugs": {
-    "url": "https://github.com/bodhi/bodhi-async-batch/issues"
+    "url": "https://github.com/BODHEESH/bodhi-async-batch/issues"
   },
-  "homepage": "https://github.com/bodhi/bodhi-async-batch#readme",
+  "homepage": "https://github.com/BODHEESH/bodhi-async-batch#readme",
   "engines": {
     "node": ">=14.0.0"
   },
-  "license": "MIT",
   "devDependencies": {
     "@types/jest": "^29.5.14",
     "@types/node": "^20.17.45",
